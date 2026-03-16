@@ -80,21 +80,13 @@ litter-robot-notifier/
 
 ## Cloud Run deployment
 
-- **Project**: `litter-robot-notifications`
-- **Region**: `us-central1`
-- **Job**: `litter-robot-poller`
-- **Scheduler**: `litter-robot-schedule` (every 3 hours)
-- **Service account**: `litter-robot-runner@litter-robot-notifications.iam.gserviceaccount.com`
-- **Image**: `us-central1-docker.pkg.dev/litter-robot-notifications/litter-robot/poller:latest`
-- **GCS bucket**: `litter-robot-notifications-state` (stores `state.json`)
-- **Secrets**: stored in Google Secret Manager, injected as env vars
+Can be deployed as a Google Cloud Run Job with Cloud Scheduler for hands-off operation. See README.md for deployment instructions.
 
-To redeploy after code changes:
-```bash
-docker build --platform linux/amd64 -t us-central1-docker.pkg.dev/litter-robot-notifications/litter-robot/poller:latest .
-docker push us-central1-docker.pkg.dev/litter-robot-notifications/litter-robot/poller:latest
-gcloud run jobs update litter-robot-poller --image us-central1-docker.pkg.dev/litter-robot-notifications/litter-robot/poller:latest --region us-central1 --project litter-robot-notifications
-```
+Key components:
+- **Cloud Run Job** — runs the poller as a containerized task
+- **Cloud Scheduler** — triggers the job on a cron schedule (e.g. every 3 hours)
+- **GCS bucket** — persists `state.json` for dedup across ephemeral container runs
+- **Secret Manager** — stores credentials as env vars injected at runtime
 
 ## Important technical notes
 

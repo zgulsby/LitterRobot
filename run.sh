@@ -1,3 +1,4 @@
 #!/bin/sh
-cd /Users/zachgulsby/LitterRobot
-/opt/homebrew/bin/python3.11 -m src.main >> /tmp/litterrobot.log 2>&1
+# Local convenience script — adjust paths to match your environment
+cd "$(dirname "$0")"
+python3 -m src.main >> /tmp/litterrobot.log 2>&1
