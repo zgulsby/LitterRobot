@@ -1,0 +1,11 @@
+.env
+credentials.json
+token.json
+state.json
+__pycache__/
+*.pyc
+.pytest_cache/
+dist/
+*.egg-info/
+.DS_Store
+.claude/
