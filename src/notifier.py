@@ -59,6 +59,8 @@ async def run(config: Config) -> None:
     for robot in statuses:
         if _is_above_threshold(robot, config.drawer_threshold):
             if _should_notify(robot.serial, state, config.dedup_hours):
+                level_str = f"{robot.drawer_level}%" if robot.drawer_level is not None else "FULL"
+                summary = f"🐱 Empty {robot.name} ({level_str})"
                 logger.info(
                     "Drawer needs attention on %s (level=%s). Creating Skylight chore.",
                     robot.name,
@@ -67,7 +69,7 @@ async def run(config: Config) -> None:
                 create_chore(
                     email=config.skylight_email,
                     password=config.skylight_password,
-                    summary=config.chore_summary,
+                    summary=summary,
                     chore_date=datetime.now(timezone.utc).date(),
                 )
                 state.setdefault(robot.serial, {})["last_notified"] = datetime.now(
